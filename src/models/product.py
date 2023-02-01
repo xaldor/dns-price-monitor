@@ -34,13 +34,13 @@ class ProductSQLModel(BaseSQLModel):
     async def get_by_id(
         cls, db: AsyncSession, target_id: int
     ) -> Optional[ProductSQLModel]:
-        return await db.execute(select(cls).where(cls.id == target_id)).first()
+        return (await db.execute(select(cls).where(cls.id == target_id))).first()
 
     @classmethod
     async def get_by_url(
         cls, db: AsyncSession, target_url: AnyHttpUrl
     ) -> Optional[ProductSQLModel]:
-        return await db.execute(select(cls).where(cls.url == target_url)).first()
+        return (await db.execute(select(cls).where(cls.url == target_url))).first()
 
     @classmethod
     async def create(
@@ -51,5 +51,5 @@ class ProductSQLModel(BaseSQLModel):
             raise ProductAlreadyInMonitorList
         product = ProductSQLModel(**product_info.dict())
         db.add(product)
-        db.flush()
+        await db.flush()
         return product
