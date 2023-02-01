@@ -1,0 +1,46 @@
+from .base import AsyncApiService
+from ..schemas.product import AddProductRequest, AddProductResponse
+
+from fastapi import Depends
+from fastapi.concurrency import run_in_threadpool
+from sqlalchemy.ext.asyncio import AsyncSession
+from src.database import get_database_session
+from src.dns import get_dns_scraper, DNSWebScraper
+
+from src.schemas import Product, ProductInfo
+from src.models import ProductSQLModel
+
+from src.exceptions import ProductAlreadyInMonitorList
+from src.logger import logger
+
+
+class AddProduct(AsyncApiService):
+    """API service that adds product into the monitor list"""
+
+    def __init__(
+        self,
+        db: AsyncSession = Depends(get_database_session),
+        dns: DNSWebScraper = Depends(get_dns_scraper),
+    ):
+        self.__db = db
+        self.__dns = dns
+
+    def __call__(self):
+        return self
+
+    async def process(self, data: AddProductRequest) -> AddProductResponse:
+        db, dns = self.__db, self.__dns
+        extracted_product_info: ProductInfo = await run_in_threadpool(
+            lambda: dns.get_product(data.url)
+        )
+        try:
+            db_product: ProductSQLModel = await ProductSQLModel.create(
+                db, extracted_product_info
+            )
+        except ProductAlreadyInMonitorList:
+            logger.debug(
+                f"Trying to add to monitor list product, that already is there: {extracted_product_info.title}"
+            )
+            raise
+        else:
+            return AddProductResponse(product=Product.from_orm(db_product))
