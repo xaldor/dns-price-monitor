@@ -13,3 +13,7 @@ POSTGRES_URL: PostgresDsn = PostgresDsn(
     f"{env('POSTGRES_SCHEME')}://{env('POSTGRES_USER')}:{env('POSTGRES_PASSWORD')}@{env('POSTGRES_HOST')}:{env('POSTGRES_PORT')}/{env('POSTGRES_DB')}",
     scheme=env("POSTGRES_SCHEME"),
 )
+
+PRICE_UPDATE_INTERVAL_IN_MINUTES: int = env(
+    "PRICE_UPDATE_INTERVAL_IN_MINUTES", cast=int
+)
