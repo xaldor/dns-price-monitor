@@ -8,7 +8,7 @@ from typing import Generator, TypeAlias, Optional, Any
 
 from src.schemas import ProductInfo, Price
 
-from .settings import (
+from src.dns.settings import (
     SELENIUM_WEBDRIVER,
     SELENIUM_TIMEOUT_IN_SECONDS,
     RATING_SCALE,
