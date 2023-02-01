@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "dns-price-monitor"
+version = "0.1.0"
+description = ""
+authors = ["Artemy Efimov <artemyfmv@gmail.com>"]
+readme = "README.md"
+packages = [{include = "dns_price_monitor"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.89.1"
+uvicorn = "^0.20.0"
+gunicorn = "^20.1.0"
+sqlalchemy = "^2.0.0"
+alembic = "^1.9.2"
+asyncpg = "^0.27.0"
+selenium = "^4.8.0"
+pytest = "^7.2.1"
+httpx = "^0.23.3"
+jinja2 = "^3.1.2"
+
+
+[tool.poetry.group.dev.dependencies]
+black = {version = "^23.1.0", allow-prereleases = true}
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

@@ -1,0 +1,6 @@
+#!/bin/sh
+
+# Use this script to run any command with environment variables been exported from local '.env' file
+
+set -a && . ./.env && set +a && "$@"
+
