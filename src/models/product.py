@@ -9,7 +9,7 @@ class ProductSQLModel(BaseSQLModel):
     __tablename__ = "products"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    title = Column(String(256), nullable=False)
+    title = Column(String(PRODUCT_TITLE_MAX_LEN), nullable=False)
     url = Column(Text, nullable=False, unique=True)
     description = Column(Text, nullable=True)
     rating = Column(Float, nullable=True)
