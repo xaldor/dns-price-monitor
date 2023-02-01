@@ -15,7 +15,7 @@ from src.database import get_database_session
 from src.dns import get_dns_scraper, DNSWebScraper
 
 from src.schemas import Product, ProductInfo
-from src.models import ProductSQLModel
+from src.models import ProductSQLModel, PriceRecordSQLModel
 
 from src.exceptions import ProductAlreadyInMonitorList
 from src.logger import logger
@@ -62,6 +62,7 @@ class RemoveProduct(AsyncApiService):
 
     async def process(self, data: RemoveProductRequest) -> RemoveProductResponse:
         db = self.__db
+        await PriceRecordSQLModel.delete_all_by_product_id(db, data.id)
         await ProductSQLModel.delete(db, data.id)
         return RemoveProductResponse()
 
