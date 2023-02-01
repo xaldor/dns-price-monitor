@@ -1,6 +1,10 @@
+from __future__ import annotations
 from .base import BaseSQLModel
 from sqlalchemy import Column, Integer, ForeignKey, DateTime
 from sqlalchemy.sql import func
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from src.schemas import Price, ProductId
 
 
 class PriceRecordSQLModel(BaseSQLModel):
@@ -10,3 +14,15 @@ class PriceRecordSQLModel(BaseSQLModel):
     product_id = Column(Integer, ForeignKey("products.id"))
     price = Column(Integer, nullable=False)
     timestamp = Column(DateTime(timezone=True), default=func.now())
+
+    @classmethod
+    async def create(
+        cls,
+        db: AsyncSession,
+        price: Price,
+        product_id: ProductId,
+    ) -> PriceRecordSQLModel:
+        price_record = PriceRecordSQLModel(price=price, product_id=product_id)
+        db.add(price_record)
+        await db.flush()
+        return price_record

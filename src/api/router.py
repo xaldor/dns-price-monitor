@@ -10,7 +10,10 @@ from .schemas.product import (
     GetAllProductsResponse,
 )
 
+from .schemas.price_history import GetPriceHistoryRequest, GetPriceHistoryResponse
+
 from .services.product import AddProduct, RemoveProduct, GetAllProducts
+from .services.price_history import GetPriceHistory
 
 router = APIRouter()
 
@@ -34,3 +37,10 @@ async def get_all_products_in_monitor_list(
     service: GetAllProducts = Depends(GetAllProducts),
 ) -> GetAllProductsResponse:
     return await service.process(GetAllProductsRequest())
+
+
+@router.get("/products/{product_id}/price_history")
+async def get_price_history(
+    product_id: int, service: GetPriceHistory = Depends(GetPriceHistory)
+) -> GetPriceHistoryResponse:
+    return await service.process(GetPriceHistoryRequest(product_id=product_id))
