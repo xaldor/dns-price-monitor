@@ -3,7 +3,7 @@ from .base import BaseSQLModel
 from sqlalchemy import Column, Integer, Text, String, Float
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from sqlalchemy import select, delete
 from typing import Optional
 from pydantic import AnyHttpUrl
 
@@ -64,3 +64,7 @@ class ProductSQLModel(BaseSQLModel):
         db.add(product)
         await db.flush()
         return product
+
+    @classmethod
+    async def delete(cls, db: AsyncSession, target_id: int):
+        await db.execute(delete(cls).where(cls.id == target_id))

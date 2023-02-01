@@ -1,5 +1,10 @@
 from .base import AsyncApiService
-from ..schemas.product import AddProductRequest, AddProductResponse
+from ..schemas.product import (
+    AddProductRequest,
+    AddProductResponse,
+    RemoveProductRequest,
+    RemoveProductResponse,
+)
 
 from fastapi import Depends
 from fastapi.concurrency import run_in_threadpool
@@ -44,3 +49,16 @@ class AddProduct(AsyncApiService):
             raise
         else:
             return AddProductResponse(product=Product.from_orm(db_product))
+
+
+class RemoveProduct(AsyncApiService):
+    def __init__(self, db: AsyncSession = Depends(get_database_session)):
+        self.__db = db
+
+    def __call__(self):
+        return self
+
+    async def process(self, data: RemoveProductRequest) -> RemoveProductResponse:
+        db = self.__db
+        await ProductSQLModel.delete(db, data.id)
+        return RemoveProductResponse()
