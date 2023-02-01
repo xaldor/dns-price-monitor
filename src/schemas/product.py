@@ -18,3 +18,6 @@ class ProductInfo(BaseModel):
 
 class Product(ProductInfo):
     id: ProductId
+
+    class Config:
+        orm_mode = True

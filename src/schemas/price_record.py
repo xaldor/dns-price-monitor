@@ -15,3 +15,6 @@ class PriceRecordInfo(BaseModel):
 
 class PriceRecord(PriceRecordInfo):
     id: PriceRecordId
+
+    class Config:
+        orm_mode = True
