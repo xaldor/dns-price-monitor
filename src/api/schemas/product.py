@@ -18,3 +18,11 @@ class RemoveProductRequest(BaseModel):
 
 class RemoveProductResponse(BaseModel):
     pass
+
+
+class GetAllProductsRequest(BaseModel):
+    pass
+
+
+class GetAllProductsResponse(BaseModel):
+    products: list[Product]

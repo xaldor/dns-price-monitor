@@ -6,9 +6,11 @@ from .schemas.product import (
     AddProductResponse,
     RemoveProductRequest,
     RemoveProductResponse,
+    GetAllProductsRequest,
+    GetAllProductsResponse,
 )
 
-from .services.product import AddProduct, RemoveProduct
+from .services.product import AddProduct, RemoveProduct, GetAllProducts
 
 router = APIRouter()
 
@@ -25,3 +27,10 @@ async def delete_product_from_monitor_list(
     product_id: int, service: RemoveProduct = Depends(RemoveProduct)
 ) -> RemoveProductResponse:
     return await service.process(RemoveProductRequest(id=product_id))
+
+
+@router.get("/products")
+async def get_all_products_in_monitor_list(
+    service: GetAllProducts = Depends(GetAllProducts),
+) -> GetAllProductsResponse:
+    return await service.process(GetAllProductsRequest())

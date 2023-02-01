@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer, Text, String, Float
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select, delete
-from typing import Optional
+from typing import Optional, AsyncIterator
 from pydantic import AnyHttpUrl
 
 
@@ -68,3 +68,9 @@ class ProductSQLModel(BaseSQLModel):
     @classmethod
     async def delete(cls, db: AsyncSession, target_id: int):
         await db.execute(delete(cls).where(cls.id == target_id))
+
+    @classmethod
+    async def get_all(cls, db: AsyncSession) -> AsyncIterator[ProductSQLModel, None]:
+        products = await db.stream(select(cls))
+        async for product in products:
+            yield product.ProductSQLModel

@@ -4,6 +4,8 @@ from ..schemas.product import (
     AddProductResponse,
     RemoveProductRequest,
     RemoveProductResponse,
+    GetAllProductsRequest,
+    GetAllProductsResponse,
 )
 
 from fastapi import Depends
@@ -62,3 +64,20 @@ class RemoveProduct(AsyncApiService):
         db = self.__db
         await ProductSQLModel.delete(db, data.id)
         return RemoveProductResponse()
+
+
+class GetAllProducts(AsyncApiService):
+    def __init__(self, db: AsyncSession = Depends(get_database_session)):
+        self.__db = db
+
+    def __call__(self):
+        return self
+
+    async def process(self, data: GetAllProductsRequest) -> GetAllProductsResponse:
+        db = self.__db
+        return GetAllProductsResponse(
+            products=[
+                Product.from_orm(product_orm)
+                async for product_orm in ProductSQLModel.get_all(db)
+            ]
+        )
