@@ -9,7 +9,7 @@ from pydantic import AnyHttpUrl
 
 
 from src.schemas import ProductInfo
-from src.exceptions import ProductAlreadyInMonitorList
+from src.exceptions import ProductAlreadyInMonitorList, ProductDoesNotExist
 
 PRODUCT_TITLE_MAX_LEN: int = 256
 
@@ -31,23 +31,34 @@ class ProductSQLModel(BaseSQLModel):
 
     # TODO: Combine `get_by_id` and `get_by_url` into one method
     @classmethod
-    async def get_by_id(
-        cls, db: AsyncSession, target_id: int
-    ) -> Optional[ProductSQLModel]:
-        return (await db.execute(select(cls).where(cls.id == target_id))).first()
+    async def get_by_id(cls, db: AsyncSession, target_id: int) -> ProductSQLModel:
+        product: ProductSQLModel = (
+            await db.execute(select(cls).where(cls.id == target_id))
+        ).first()
+        if not product:
+            raise ProductDoesNotExist
+        return product
 
     @classmethod
     async def get_by_url(
         cls, db: AsyncSession, target_url: AnyHttpUrl
     ) -> Optional[ProductSQLModel]:
-        return (await db.execute(select(cls).where(cls.url == target_url))).first()
+        product: ProductSQLModel = (
+            await db.execute(select(cls).where(cls.url == target_url))
+        ).first()
+        if not product:
+            raise ProductDoesNotExist
+        return product
 
     @classmethod
     async def create(
         cls, db: AsyncSession, product_info: ProductInfo
     ) -> ProductSQLModel:
-        exists = await cls.get_by_url(db, product_info.url)
-        if exists:
+        try:
+            await cls.get_by_url(db, product_info.url)
+        except ProductDoesNotExist:
+            pass
+        else:
             raise ProductAlreadyInMonitorList
         product = ProductSQLModel(**product_info.dict())
         db.add(product)
