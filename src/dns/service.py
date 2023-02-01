@@ -8,7 +8,7 @@ from typing import Generator, TypeAlias, Optional
 
 from src.schemas import ProductInfo, Price
 
-from .settings import SELENIUM_TIMEOUT_IN_SECONDS
+from .settings import SELENIUM_TIMEOUT_IN_SECONDS, PRICE_ELEMENT_SELECTOR
 
 
 WebElementSelector: TypeAlias = tuple[str, str]
@@ -62,7 +62,13 @@ class DNSWebScraper:
         Returns:
             Price: product current price
         """
-        pass
+        driver = self.__driver
+        driver.get(url)
+        driver.fullscreen_window()
+
+        element = self.__find_visible_element(PRICE_ELEMENT_SELECTOR)
+        price = int("".join(filter(str.isdigit, element.text)))
+        return price
 
 
 def get_dns_scraper() -> Generator[DNSWebScraper, None, None]:
