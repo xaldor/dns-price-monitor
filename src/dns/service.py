@@ -9,6 +9,7 @@ from typing import Generator, TypeAlias, Optional, Any
 from src.schemas import ProductInfo, Price
 
 from .settings import (
+    SELENIUM_WEBDRIVER,
     SELENIUM_TIMEOUT_IN_SECONDS,
     RATING_SCALE,
     PRICE_ELEMENT_SELECTOR,
@@ -107,4 +108,5 @@ class DNSWebScraper:
 
 def get_dns_scraper() -> Generator[DNSWebScraper, None, None]:
     """Generates DNSWebScraper instance. Intended to be used as a dependency."""
-    pass
+    with SELENIUM_WEBDRIVER() as driver:
+        yield DNSWebScraper(driver)

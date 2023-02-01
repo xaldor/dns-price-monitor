@@ -1,4 +1,7 @@
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver import Chrome, Firefox, Safari, Ie
 from selenium.webdriver.common.by import By
+from typing import Type
 
 from src.settings import env
 
@@ -30,3 +33,10 @@ RATING_ELEMENT_SELECTOR: WebElementSelector = (
     By.CLASS_NAME,
     "circle-rating__number",
 )
+
+SELENIUM_WEBDRIVER: Type[WebDriver] = {
+    "chrome": Chrome,
+    "firefox": Firefox,
+    "safari": Safari,
+    "ie": Ie,
+}[env("SELENIUM_WEBDRIVER")]
