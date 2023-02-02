@@ -1,0 +1,2 @@
+class WebElementWasNotFound(Exception):
+    pass

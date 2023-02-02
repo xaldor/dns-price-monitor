@@ -16,6 +16,11 @@ PRICE_ELEMENT_SELECTOR: tuple[str, str] = (
     "product-buy__price",
 )
 
+ACTIVE_PRICE_ELEMENT_SELECTOR: tuple[str, str] = (
+    By.CLASS_NAME,
+    "product-buy__price_active",
+)
+
 TITLE_ELEMENT_SELECTOR: tuple[str, str] = (
     By.CLASS_NAME,
     "product-card-top__title",

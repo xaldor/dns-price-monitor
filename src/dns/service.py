@@ -8,10 +8,13 @@ from typing import Generator, TypeAlias, Optional, Any
 
 from src.schemas import ProductInfo, Price
 
+from .exceptions import WebElementWasNotFound
+
 from src.dns.settings import (
     SELENIUM_WEBDRIVER,
     SELENIUM_TIMEOUT_IN_SECONDS,
     RATING_SCALE,
+    ACTIVE_PRICE_ELEMENT_SELECTOR,
     PRICE_ELEMENT_SELECTOR,
     TITLE_ELEMENT_SELECTOR,
     DESCRIPTION_ELEMENT_SELECTOR,
@@ -66,7 +69,7 @@ class DNSWebScraper:
         try:
             element = self.__find_visible_element(TITLE_ELEMENT_SELECTOR)
         except TimeoutException:
-            product["title"] = "None"
+            raise WebElementWasNotFound(url, "title")
         else:
             product["title"] = element.text.strip()
 
@@ -102,7 +105,13 @@ class DNSWebScraper:
         driver.get(url)
         driver.fullscreen_window()
 
-        element = self.__find_visible_element(PRICE_ELEMENT_SELECTOR)
+        try:
+            element = self.__find_visible_element(ACTIVE_PRICE_ELEMENT_SELECTOR)
+        except TimeoutException:
+            try:
+                element = self.__find_visible_element(PRICE_ELEMENT_SELECTOR)
+            except TimeoutException:
+                raise WebElementWasNotFound(url, "price")
         price = int("".join(filter(str.isdigit, element.text)))
         return price
 
