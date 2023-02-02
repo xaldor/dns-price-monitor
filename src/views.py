@@ -12,11 +12,9 @@ views = APIRouter()
 templates = Jinja2Templates(directory="src/templates")
 
 
-@views.get("/")
+@views.get("/", response_class=HTMLResponse)
 async def get_all_products_page(
-    request: Request,
-    service: GetAllProducts = Depends(GetAllProducts),
-    response_class=HTMLResponse,
+    request: Request, service: GetAllProducts = Depends(GetAllProducts)
 ):
     result = await service.process(GetAllProductsRequest())
     return templates.TemplateResponse(
