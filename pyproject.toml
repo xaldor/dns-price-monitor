@@ -4,7 +4,7 @@ version = "0.1.0"
 description = ""
 authors = ["Artemy Efimov <artemyfmv@gmail.com>"]
 readme = "README.md"
-packages = [{include = "dns_price_monitor"}]
+# packages = [{include = "dns_price_monitor"}]
 
 [tool.poetry.dependencies]
 python = "^3.10"

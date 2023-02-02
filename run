@@ -5,5 +5,4 @@ mkdir -p $LOG_DIR
 log_file=$LOG_DIR/"$(date +%F_%T%z)".log
 
 # Start the server
-uvicorn src.main:app --host $APP_HOST --port $APP_PORT --reload > $log_file 2>&1
-
+uvicorn src.main:app --host $APP_HOST --port $APP_PORT --workers $MAX_WORKERS

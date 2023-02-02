@@ -1,5 +1,7 @@
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver import Chrome, Firefox, Safari, Ie
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from typing import Type
 
@@ -34,9 +36,9 @@ RATING_ELEMENT_SELECTOR: tuple[str, str] = (
     "circle-rating__number",
 )
 
-SELENIUM_WEBDRIVER: Type[WebDriver] = {
-    "chrome": Chrome,
-    "firefox": Firefox,
-    "safari": Safari,
-    "ie": Ie,
-}[env("SELENIUM_WEBDRIVER")]
+options = webdriver.ChromeOptions()
+options.add_argument("--headless")
+options.add_argument("--no-sandbox")
+options.add_argument("--log-level=1")
+options.add_argument("--start-maximized")
+SELENIUM_WEBDRIVER: WebDriver = Chrome(chrome_options=options)

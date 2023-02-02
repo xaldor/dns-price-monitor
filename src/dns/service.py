@@ -40,16 +40,12 @@ class DNSWebScraper:
             selector (WebElementSelector): pair of strategy (By.CLASS_NAME, By.ID, etc.) and web element selector (class name, id, css selector, etc.)
 
         Returns:
-            WebElement: web element, or None, if it was not found
+            WebElement: web element
         """
-        try:
-            Wait(self.__driver, SELENIUM_TIMEOUT_IN_SECONDS).until(
-                visibility_of_element_located(selector)
-            )
-        except TimeoutException:
-            return None
-        else:
-            return self.__driver.find_element(*selector)
+        Wait(self.__driver, SELENIUM_TIMEOUT_IN_SECONDS).until(
+            visibility_of_element_located(selector)
+        )
+        return self.__driver.find_element(*selector)
 
     def get_product(self, url: AnyHttpUrl) -> ProductInfo:
         """Extracts product full information
@@ -108,5 +104,5 @@ class DNSWebScraper:
 
 def get_dns_scraper() -> Generator[DNSWebScraper, None, None]:
     """Generates DNSWebScraper instance. Intended to be used as a dependency."""
-    with SELENIUM_WEBDRIVER() as driver:
+    with SELENIUM_WEBDRIVER as driver:
         yield DNSWebScraper(driver)
