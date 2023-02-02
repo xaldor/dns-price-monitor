@@ -63,15 +63,20 @@ class DNSWebScraper:
         product: dict[str, Any] = {"url": url}
 
         # Extract title
-        element = self.__find_visible_element(TITLE_ELEMENT_SELECTOR)
-        product["title"] = element.text.strip()
+        try:
+            element = self.__find_visible_element(TITLE_ELEMENT_SELECTOR)
+        except TimeoutException:
+            product["title"] = "None"
+        else:
+            product["title"] = element.text.strip()
 
         # Extract description
         try:
             element = self.__find_visible_element(DESCRIPTION_ELEMENT_SELECTOR)
-            product["description"] = element.text.strip()
         except TimeoutException:
             product["description"] = None
+        else:
+            product["description"] = element.text.strip()
 
         # Extract rating
         try:
