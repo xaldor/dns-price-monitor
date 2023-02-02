@@ -1,0 +1,10 @@
+
+.product-card {
+    display: flexbox;
+    background-color: rgb(219, 229, 210);
+    border-radius: 10px;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+    width: fit-content;
+}
