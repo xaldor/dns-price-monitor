@@ -104,5 +104,5 @@ class DNSWebScraper:
 
 def get_dns_scraper() -> Generator[DNSWebScraper, None, None]:
     """Generates DNSWebScraper instance. Intended to be used as a dependency."""
-    with SELENIUM_WEBDRIVER as driver:
+    with SELENIUM_WEBDRIVER() as driver:
         yield DNSWebScraper(driver)

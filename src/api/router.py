@@ -15,7 +15,7 @@ from .schemas.price_history import GetPriceHistoryRequest, GetPriceHistoryRespon
 from .services.product import AddProduct, RemoveProduct, GetAllProducts
 from .services.price_history import GetPriceHistory
 
-router = APIRouter()
+router = APIRouter(prefix="/api")
 
 
 @router.post("/products")
