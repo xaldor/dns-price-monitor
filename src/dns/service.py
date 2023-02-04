@@ -5,6 +5,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.common.exceptions import TimeoutException
 from pydantic import AnyHttpUrl
 from typing import Generator, TypeAlias, Optional, Any
+from functools import lru_cache
 
 from src.schemas import ProductInfo, Price
 
@@ -116,7 +117,11 @@ class DNSWebScraper:
         return price
 
 
+@lru_cache()
+def get_selenium_webdriver():
+    return SELENIUM_WEBDRIVER()
+
+
 def get_dns_scraper() -> Generator[DNSWebScraper, None, None]:
     """Generates DNSWebScraper instance. Intended to be used as a dependency."""
-    with SELENIUM_WEBDRIVER() as driver:
-        yield DNSWebScraper(driver)
+    yield DNSWebScraper(get_selenium_webdriver())
