@@ -113,7 +113,11 @@ class DNSWebScraper:
                 element = self.__find_visible_element(PRICE_ELEMENT_SELECTOR)
             except TimeoutException:
                 raise WebElementWasNotFound(url, "price")
-        price = int("".join(filter(str.isdigit, element.text)))
+
+        # Dirty walkaround solution :)
+        # Just remove anything after '₽' (including the old price)
+        # Now prices with discount are extracted correctly
+        price = int("".join(filter(str.isdigit, element.text.split("₽")[0])))
         return price
 
 
