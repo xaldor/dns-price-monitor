@@ -1,0 +1,24 @@
+version: '3'
+
+services:
+
+  app:
+    build: .
+    network_mode: host
+    depends_on:
+      - postgres
+    env_file:
+      - .env
+    command: ["/app/run"]
+    ports:
+      - "${APP_PORT}:${APP_PORT}"
+    tty: true
+    stdin_open: true
+
+  postgres:
+    image: "postgres:${POSTGRES_VERSION}"
+    network_mode: host
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}

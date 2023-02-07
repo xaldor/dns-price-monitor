@@ -2,6 +2,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support.wait import WebDriverWait as Wait
 from selenium.webdriver.support.expected_conditions import visibility_of_element_located
 from selenium.webdriver.remote.webelement import WebElement
+from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from pydantic import AnyHttpUrl
 from typing import Generator, TypeAlias, Optional, Any
@@ -123,7 +124,14 @@ class DNSWebScraper:
 
 @lru_cache()
 def get_selenium_webdriver():
-    return SELENIUM_WEBDRIVER()
+    options = webdriver.ChromeOptions()
+    options.add_argument("--no-sandbox")
+    options.add_argument("--window-size=1420,1080")
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--disable-dev-shm-usage")
+
+    return SELENIUM_WEBDRIVER(chrome_options=options)
 
 
 def get_dns_scraper() -> Generator[DNSWebScraper, None, None]:

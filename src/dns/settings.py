@@ -1,7 +1,5 @@
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver import Chrome, Firefox, Safari, Ie
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from typing import Type
 
@@ -41,9 +39,4 @@ RATING_ELEMENT_SELECTOR: tuple[str, str] = (
     "circle-rating__number",
 )
 
-SELENIUM_WEBDRIVER: Type[WebDriver] = {
-    "chrome": Chrome,
-    "firefox": Firefox,
-    "ie": Ie,
-    "safari": Safari,
-}[env("SELENIUM_WEBDRIVER")]
+SELENIUM_WEBDRIVER: Type[WebDriver] = Chrome
