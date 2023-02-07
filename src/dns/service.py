@@ -4,13 +4,13 @@ from selenium.webdriver.support.expected_conditions import visibility_of_element
 from selenium.webdriver.remote.webelement import WebElement
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
-from pydantic import AnyHttpUrl
+from pydantic import AnyHttpUrl, validate_arguments
 from typing import Generator, TypeAlias, Optional, Any
 from functools import lru_cache
 
 from src.schemas import ProductInfo, Price
 
-from .exceptions import WebElementWasNotFound
+from .exceptions import WebElementWasNotFound, InvalidUrl
 
 from src.dns.settings import (
     SELENIUM_WEBDRIVER,
@@ -22,10 +22,17 @@ from src.dns.settings import (
     DESCRIPTION_ELEMENT_SELECTOR,
     RATING_ELEMENT_SELECTOR,
     BUTTON_TO_SHOW_RATING_SELECTOR,
+    DNS_HOST,
 )
 
 
 WebElementSelector: TypeAlias = tuple[str, str]
+
+
+@validate_arguments
+def validate_url(url: AnyHttpUrl):
+    if url.host != DNS_HOST:
+        raise InvalidUrl(status_code=400, detail=f"{url} is not a valid dns-shop URL")
 
 
 class DNSWebScraper:
@@ -61,6 +68,7 @@ class DNSWebScraper:
         Returns:
             ProductInfo
         """
+        validate_url(url)
         driver = self.__driver
         driver.get(url)
         driver.fullscreen_window()
@@ -103,6 +111,7 @@ class DNSWebScraper:
         Returns:
             Price: product current price
         """
+        validate_url(url)
         driver = self.__driver
         driver.get(url)
         driver.fullscreen_window()

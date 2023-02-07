@@ -5,6 +5,8 @@ from typing import Type
 
 from src.settings import env
 
+DNS_HOST: str = "www.dns-shop.ru"
+
 SELENIUM_TIMEOUT_IN_SECONDS: int = env("SELENIUM_TIMEOUT_IN_SECONDS", cast=int)
 
 RATING_SCALE: int = 5
